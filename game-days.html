@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Days of Week Game</title>
+    <style>
+        .day-train {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .day-carriage {
+            background: #a29bfe;
+            color: white;
+            padding: 15px;
+            margin: 0 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .day-carriage:hover {
+            background: #6c5ce7;
+            transform: translateY(-5px);
+        }
+
+        .today {
+            background: #fd79a8;
+            font-weight: bold;
+            transform: scale(1.1);
+        }
+
+        .day-activity {
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>Learn & Play</h1>
+    </div>
+
+    <div id="tabs-top">
+        <a href="index.html">Home</a>
+        <a href="Maths.html">Math Fun</a>
+        <a href="Reading.html">Reading</a>
+        <a href="Games.html">Games</a>
+        <a href="about.html">About Us</a>
+    </div>
+
+    <div id="main">
+        <div id="content">
+            <div id="info-box-full">
+                <h1>Days of Week Game</h1>
+                <p>Learn the days of the week! Click on each day to hear it.</p>
+
+                <div class="day-train" id="day-train">
+                    <!-- Days will be added by JavaScript -->
+                </div>
+
+                <div style="text-align: center; margin: 30px 0;">
+                    <button onclick="dayQuiz()" class="button">Day Quiz</button>
+                    <p id="day-quiz" style="font-size: 1.5em; margin-top: 10px;"></p>
+                </div>
+
+                <div style="background: #dfe6e9; padding: 20px; border-radius: 10px;">
+                    <h3>Today is...</h3>
+                    <button onclick="speakToday()" class="button">Tell Me Today</button>
+                </div>
+
+                <a href="Games.html" class="button">Back to Games</a>
+            </div>
+        </div>
+    </div>
+
+    <div id="tabs-bottom">
+        <a href="contact.html">CONTACT</a>
+        <a href="feedback.html">FEEDBACK</a>
+    </div>
+
+    <script>
+        const days = [
+            { name: "Sunday", activity: "Rest day" },
+            { name: "Monday", activity: "School day" },
+            { name: "Tuesday", activity: "Play day" },
+            { name: "Wednesday", activity: "Learning day" },
+            { name: "Thursday", activity: "Fun day" },
+            { name: "Friday", activity: "Party day" },
+            { name: "Saturday", activity: "Adventure day" }
+        ];
+
+        // Create day train
+        const train = document.getElementById('day-train');
+        const todayIndex = new Date().getDay(); // 0-6 (Sun-Sat)
+
+        days.forEach((day, index) => {
+            const carriage = document.createElement('div');
+            carriage.className = index === todayIndex ? 'day-carriage today' : 'day-carriage';
+            carriage.innerHTML = `
+                <div>${day.name.substring(0, 3)}</div>
+                <div class="day-activity">${day.activity}</div>
+            `;
+            carriage.onclick = function () { speakDay(day.name); };
+            train.appendChild(carriage);
+        });
+
+        function speakDay(day) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(day);
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function speakToday() {
+            const today = days[new Date().getDay()].name;
+            speakDay(`Today is ${today}`);
+        }
+
+        function dayQuiz() {
+            const randomDay = days[Math.floor(Math.random() * days.length)];
+            const quiz = document.getElementById('day-quiz');
+            quiz.textContent = `Can you find ${randomDay.name}?`;
+
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(
+                    `Find the day ${randomDay.name}`
+                );
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+        }
+    </script>
+</body>
+
+</html>
